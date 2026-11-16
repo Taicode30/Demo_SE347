@@ -1,0 +1,617 @@
+/* =========================================================================
+   style.css — Component + layout, dịch từ Figma Auto Layout sang Flexbox/Grid
+   Quy ước tên class = tên layer trong Figma (BEM): card-event, btn--primary…
+   Mọi màu / khoảng cách / bo góc đều dùng biến trong tokens.css.
+   ========================================================================= */
+
+/* ---------- Base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font: var(--font-body);
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+main { flex: 1; outline: none; }
+
+h1, h2, h3, p, ul, figure { margin: 0; }
+img { display: block; max-width: 100%; height: auto; }
+a { color: var(--color-primary); }
+button, input { font: inherit; color: inherit; }
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+[hidden] { display: none !important; }
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--space-4);
+  top: -100px;
+  z-index: 100;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  font: var(--font-label);
+}
+.skip-link:focus { top: var(--space-2); }
+
+/* Content rộng 1200px trong frame 1440 (padding 120 mỗi bên) */
+.container {
+  width: min(1200px, 100% - 2 * var(--space-4));
+  margin-inline: auto;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding-block: 48px;
+}
+
+/* ---------- Icon: file SVG trong img/icons, tô bằng currentColor ---------- */
+.icon {
+  display: inline-block;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  background-color: currentColor;
+  -webkit-mask: var(--icon) center / contain no-repeat;
+          mask: var(--icon) center / contain no-repeat;
+}
+.icon--back     { --icon: url("../img/icons/back.svg"); }
+.icon--calendar { --icon: url("../img/icons/calendar.svg"); }
+.icon--map-pin  { --icon: url("../img/icons/map-pin.svg"); }
+.icon--check    { --icon: url("../img/icons/check.svg"); width: 32px; height: 32px; }
+.icon--alert    { --icon: url("../img/icons/alert.svg"); }
+.icon--moon     { --icon: url("../img/icons/moon.svg"); width: 20px; height: 20px; }
+.icon--sun      { --icon: url("../img/icons/sun.svg"); width: 20px; height: 20px; }
+
+/* =========================================================================
+   Component: Button  (Figma: Button · Type × State)
+   Auto Layout ngang · padding 12/20 · gap 8 · radius 8 · Hug contents
+   ========================================================================= */
+.btn {
+  display: inline-flex;              /* Auto Layout */
+  align-items: center;               /* Alignment: center */
+  justify-content: center;
+  gap: var(--space-2);               /* Gap 8 */
+  padding: var(--space-3) var(--space-5); /* Padding 12 / 20 */
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);   /* Radius 8 */
+  font: var(--font-label);           /* Label/Default */
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+}
+
+/* Type=Primary */
+.btn--primary {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+.btn--primary:hover { background: var(--color-primary-hover); }   /* State=Hover */
+
+/* Type=Secondary */
+.btn--secondary {
+  background: var(--color-bg);
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+.btn--secondary:hover { background: var(--color-primary-subtle); } /* State=Hover */
+
+/* State=Disabled — dùng cho <button disabled> và <a aria-disabled="true"> */
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  background: var(--color-disabled-bg);
+  color: var(--color-disabled-text);
+  border-color: transparent;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.btn--secondary:disabled,
+.btn--secondary[aria-disabled="true"] {
+  background: var(--color-bg);
+  border-color: var(--color-border);
+}
+
+/* Fill container */
+.btn--block { width: 100%; }
+
+/* =========================================================================
+   Header / Footer
+   ========================================================================= */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-border);
+}
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-block: var(--space-5);
+}
+.site-header__logo {
+  font: var(--font-h2);
+  color: var(--color-primary);
+  text-decoration: none;
+}
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+.site-nav__link {
+  font: var(--font-label);
+  color: var(--color-text);
+  text-decoration: none;
+}
+.site-nav__link:hover { color: var(--color-primary); }
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  background: var(--color-bg);
+  color: var(--color-text);
+  cursor: pointer;
+}
+.theme-toggle:hover { background: var(--color-surface); }
+
+.site-footer {
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+}
+.site-footer__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-block: 32px;
+}
+.site-footer__info { display: flex; flex-direction: column; gap: var(--space-1); }
+.site-footer__brand { font: var(--font-label); }
+.site-footer__org { font: var(--font-small); color: var(--color-text-muted); }
+.site-footer__copy { font: var(--font-caption); color: var(--color-text-muted); }
+
+/* =========================================================================
+   Home
+   ========================================================================= */
+.home-hero {
+  background: var(--color-primary-subtle);
+  padding-block: 80px;
+}
+.home-hero__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+.home-hero__eyebrow { font: var(--font-caption-strong); color: var(--color-primary); }
+.home-hero__title { font: var(--font-display); outline: none; }
+.home-hero__desc { max-width: 640px; color: var(--color-text-muted); }
+.home-hero__actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+
+.event-list {
+  padding-block: 48px 64px;
+  scroll-margin-top: 72px;
+}
+.event-list .container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+.section-title { font: var(--font-h2); }
+.event-list__status { color: var(--color-text-muted); }
+
+/* Figma event-grid: 3 cột Fill, gap 24 */
+.event-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-6);
+}
+
+/* =========================================================================
+   Component: Card/Event  (Status = Còn chỗ / Hết chỗ)
+   Auto Layout dọc · padding 16 · gap 12
+   ========================================================================= */
+.card-event {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+.card-event:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 4px 16px rgb(15 23 42 / .08);
+}
+.card-event__thumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 140px;
+  background: var(--color-primary-subtle);
+  color: var(--color-primary);
+  font: var(--font-h1);
+}
+.card-event__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+}
+.card-event__title { font: var(--font-h2); }
+.card-event__link {
+  color: inherit;
+  text-decoration: none;
+}
+/* Cả thẻ bấm được (link phủ toàn thẻ), nút CTA vẫn nằm trên */
+.card-event__link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.card-event__meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font: var(--font-small);
+  color: var(--color-text-muted);
+}
+.card-event__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  width: 100%;
+  margin-top: auto;
+}
+.card-event__cta { position: relative; z-index: 1; }
+
+.card-event--full .card-event__thumb {
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+}
+
+/* ---------- Badges ---------- */
+.badge-category,
+.badge-capacity {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+.badge-category {
+  background: var(--color-primary-subtle);
+  color: var(--color-primary);
+  font: var(--font-caption-strong);
+}
+.badge-capacity {
+  background: var(--color-success-bg);
+  color: var(--color-success);
+  font: var(--font-label);
+}
+.badge-capacity--full {
+  background: var(--color-error-bg);
+  color: var(--color-error);
+}
+
+/* =========================================================================
+   Detail
+   ========================================================================= */
+.link-back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  align-self: flex-start;
+  font: var(--font-label);
+  color: var(--color-primary);
+  text-decoration: none;
+}
+.link-back .icon { width: 20px; height: 20px; }
+.link-back:hover { text-decoration: underline; }
+
+/* Figma detail-layout: cột chính Fill + aside 384px, gap 48 */
+.detail-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 384px;
+  align-items: start;
+  gap: 48px;
+}
+.detail-main {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+.event-hero {
+  width: 100%;
+  border-radius: 16px;
+}
+.event-heading {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+.event-title { font: var(--font-h1); outline: none; }
+.event-description {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.event-description__text { color: var(--color-text-muted); }
+.highlight-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-left: var(--space-5);
+  color: var(--color-text-muted);
+}
+.highlight-list li::marker { color: var(--color-primary); }
+
+.detail-aside {
+  position: sticky;
+  top: 96px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.card-event-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+}
+.meta-item {
+  display: flex;
+  gap: var(--space-4);
+  width: 100%;
+}
+.meta-item__icon { color: var(--color-primary); }
+.meta-item__text { display: flex; flex-direction: column; gap: var(--space-1); }
+.meta-item__label { font: var(--font-small); color: var(--color-text-muted); }
+.meta-item__value { font: var(--font-body-medium); }
+
+.bottom-bar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.detail-aside__note { font: var(--font-caption); color: var(--color-text-muted); }
+
+/* =========================================================================
+   Form + Success  (card 560px ở giữa trên nền surface)
+   ========================================================================= */
+.view[data-view="register"],
+.view[data-view="success"] { background: var(--color-surface); }
+
+.form-page { max-width: 560px; }
+
+.card-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding: var(--space-6);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+.event-summary { display: flex; flex-direction: column; gap: var(--space-1); }
+.event-summary__title { font: var(--font-h2); }
+.event-summary__meta { font: var(--font-small); color: var(--color-text-muted); }
+
+.form-register {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* =========================================================================
+   Component: Input  (State = Default / Hover / Disabled / Error)
+   ========================================================================= */
+.input {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+.input__label { font: var(--font-label); }
+.input__field {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+  font: var(--font-body);
+  color: var(--color-text);
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+.input__field::placeholder { color: var(--color-text-muted); opacity: .7; }
+.input__field:hover { border-color: var(--color-primary); }          /* State=Hover */
+.input__field:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-subtle);
+}
+.input__field:disabled {                                               /* State=Disabled */
+  background: var(--color-surface);
+  color: var(--color-disabled-text);
+  border-color: var(--color-border);
+  cursor: not-allowed;
+}
+.input__field:disabled + .input__helper,
+.input:has(.input__field:disabled) .input__label { color: var(--color-disabled-text); }
+.input__helper { font: var(--font-caption); color: var(--color-text-muted); }
+
+/* State=Error — JS thêm class .input--error vào khối .input */
+.input--error .input__field {
+  border-color: var(--color-error);
+  background: var(--color-error-bg);
+}
+.input--error .input__field:focus { box-shadow: 0 0 0 3px var(--color-error-bg); }
+.input--error .input__helper { color: var(--color-error); }
+
+/* ---------- Alert (Figma: alert alert--error) ---------- */
+.alert {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid;
+  border-radius: var(--radius-md);
+}
+.alert--error {
+  background: var(--color-error-bg);
+  border-color: var(--color-error);
+}
+.alert__icon { color: var(--color-error); }
+.alert__body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-1);
+}
+.alert__title { font: var(--font-label); color: var(--color-error); }
+.alert__desc { font: var(--font-small); }
+.alert__action { margin-top: var(--space-2); }
+
+/* ---------- Success ---------- */
+.success-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  text-align: center;
+}
+.success-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-full);
+  background: var(--color-success-bg);
+  color: var(--color-success);
+}
+.success-title { font: var(--font-h1); outline: none; }
+.success-desc { color: var(--color-text-muted); overflow-wrap: anywhere; }
+
+.card-ticket {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding: var(--space-6);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+.card-ticket__eyebrow { font: var(--font-caption-strong); color: var(--color-primary); }
+.card-ticket__event { display: flex; flex-direction: column; gap: var(--space-2); }
+.card-ticket__title { font: var(--font-h2); }
+.card-ticket__meta { font: var(--font-small); color: var(--color-text-muted); }
+.divider { width: 100%; height: 1px; margin: 0; border: 0; background: var(--color-border); }
+.card-ticket__code { display: flex; flex-direction: column; gap: var(--space-1); }
+.card-ticket__code-label { font: var(--font-small); color: var(--color-text-muted); }
+.card-ticket__code-value { font: var(--font-h2); letter-spacing: .02em; }
+.ticket-qr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+.ticket-qr__image { border-radius: var(--radius-md); }
+.ticket-qr__caption { font: var(--font-caption); color: var(--color-text-muted); }
+
+/* =========================================================================
+   Responsive — giống frame Mobile 375 trong Figma
+   Figma không có media query: designer vẽ 2 frame, dev viết @media.
+   ========================================================================= */
+@media (max-width: 768px) {
+  .site-header__inner { padding-block: var(--space-4); }
+  .site-nav { gap: var(--space-4); }
+  .site-nav__link--optional { display: none; }
+
+  .home-hero { padding-block: var(--space-6); }
+  .home-hero__inner { gap: var(--space-3); }
+  .home-hero__title { font: var(--font-h1); }
+
+  .event-list { padding-block: var(--space-6); }
+  .event-list .container { gap: var(--space-4); }
+
+  /* Danh sách sự kiện chuyển 1 cột */
+  .event-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  .page { padding-block: var(--space-6); }
+
+  .detail-layout {
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+  .detail-aside { position: static; }
+
+  /* Figma Mobile: bottom-bar luôn nằm ở đáy màn hình */
+  .view[data-view="detail"] .page { padding-bottom: 136px; }
+  .bottom-bar {
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: 5;
+    padding: var(--space-4);
+    background: var(--color-bg);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .card-form { padding: var(--space-4); gap: var(--space-6); }
+  .card-ticket { padding: var(--space-4); }
+
+  .site-footer__inner {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-block: var(--space-6);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; scroll-behavior: auto !important; }
+}

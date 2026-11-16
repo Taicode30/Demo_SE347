@@ -1,0 +1,17 @@
+# .NET
+bin/
+obj/
+*.user
+.vs/
+
+# CSDL SQLite — chứa dữ liệu đăng ký thật của lớp, KHÔNG commit
+*.db
+*.db-shm
+*.db-wal
+
+# Editor / OS
+.vscode/*
+!.vscode/settings.json
+.DS_Store
+Thumbs.db
+node_modules/

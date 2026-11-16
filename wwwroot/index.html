@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UIT Web Day 2026 · Đăng ký sự kiện</title>
+  <meta name="description" content="Đăng ký tham gia các sự kiện của UIT Web Day 2026: seminar, workshop và showcase dự án web.">
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+
+  <!-- Áp theme đã lưu trước khi vẽ trang để không bị nháy màu -->
+  <script>
+    (function () {
+      var theme = 'light';
+      try { theme = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); } catch (e) {}
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Bỏ qua điều hướng</a>
+
+  <!-- Figma: site-header (Desktop) / app-header (Mobile) -->
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="site-header__logo" href="#/">UIT Web Day</a>
+      <nav class="site-nav" aria-label="Điều hướng chính">
+        <a class="site-nav__link" href="#/">Sự kiện</a>
+        <a class="site-nav__link site-nav__link--optional" href="#/lich-trinh">Lịch trình</a>
+        <a class="site-nav__link site-nav__link--optional" href="#lien-he">Liên hệ</a>
+        <button class="theme-toggle" type="button" id="theme-toggle" aria-pressed="false">
+          <span class="icon icon--moon" aria-hidden="true"></span>
+          <span class="visually-hidden" id="theme-toggle-label">Bật giao diện tối</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+
+    <!-- ===================== HOME (Figma: screen-home) ===================== -->
+    <section class="view" id="view-home" data-view="home" aria-labelledby="home-title">
+      <div class="home-hero">
+        <div class="container home-hero__inner">
+          <p class="home-hero__eyebrow">SE347 · THỨ BẢY 24/10/2026</p>
+          <h1 class="home-hero__title" id="home-title" tabindex="-1">UIT Web Day 2026</h1>
+          <p class="home-hero__desc">Ngày hội công nghệ web của sinh viên UIT: seminar, workshop và showcase dự án. Đăng ký miễn phí, số chỗ có hạn.</p>
+          <div class="home-hero__actions">
+            <a class="btn btn--primary" href="#/lich-trinh">Xem các sự kiện</a>
+            <a class="btn btn--secondary" href="#/lich-trinh">Lịch trình trong ngày</a>
+          </div>
+        </div>
+      </div>
+
+      <section class="event-list" id="su-kien" aria-labelledby="events-title">
+        <div class="container">
+          <h2 class="section-title" id="events-title">Sự kiện nổi bật</h2>
+
+          <p class="event-list__status" id="events-status" role="status">Đang tải danh sách sự kiện…</p>
+
+          <div class="alert alert--error" id="events-error" role="alert" hidden>
+            <span class="icon icon--alert alert__icon" aria-hidden="true"></span>
+            <div class="alert__body">
+              <p class="alert__title">Không kết nối được, thử lại</p>
+              <p class="alert__desc">Không tải được danh sách sự kiện từ máy chủ.</p>
+              <button class="btn btn--secondary alert__action" type="button" id="events-retry">Thử lại</button>
+            </div>
+          </div>
+
+          <!-- Figma: event-grid · 3 cột Desktop, 1 cột Mobile (@media) -->
+          <div class="event-grid" id="event-grid"></div>
+        </div>
+      </section>
+    </section>
+
+    <!-- ===================== DETAIL (Figma: screen-detail) ===================== -->
+    <section class="view" id="view-detail" data-view="detail" aria-labelledby="detail-title" hidden>
+      <div class="container page">
+        <a class="link-back" href="#/"><span class="icon icon--back" aria-hidden="true"></span>Sự kiện</a>
+
+        <div class="detail-layout">
+          <div class="detail-main">
+            <img class="event-hero" src="img/event-hero.svg" alt="" width="343" height="204">
+
+            <div class="event-heading">
+              <span class="badge-category" id="detail-category"></span>
+              <h1 class="event-title" id="detail-title" tabindex="-1"></h1>
+            </div>
+
+            <div class="event-description">
+              <h2 class="section-title">Giới thiệu sự kiện</h2>
+              <p class="event-description__text" id="detail-desc"></p>
+              <ul class="highlight-list" id="detail-highlights"></ul>
+            </div>
+          </div>
+
+          <aside class="detail-aside" aria-label="Thông tin đăng ký">
+            <div class="card-event-meta">
+              <div class="meta-item">
+                <span class="icon icon--calendar meta-item__icon" aria-hidden="true"></span>
+                <div class="meta-item__text">
+                  <p class="meta-item__label">Thời gian</p>
+                  <p class="meta-item__value" id="detail-time"></p>
+                </div>
+              </div>
+              <div class="meta-item">
+                <span class="icon icon--map-pin meta-item__icon" aria-hidden="true"></span>
+                <div class="meta-item__text">
+                  <p class="meta-item__label">Địa điểm</p>
+                  <p class="meta-item__value" id="detail-place"></p>
+                </div>
+              </div>
+              <span class="badge-capacity" id="detail-capacity"></span>
+            </div>
+
+            <!-- Figma: bottom-bar (Mobile, dính đáy) / detail-aside (Desktop) -->
+            <div class="bottom-bar">
+              <a class="btn btn--primary btn--block" id="detail-register" href="#">Đăng ký tham gia ngay</a>
+              <p class="detail-aside__note">Miễn phí · Cần MSSV 8 chữ số để đăng ký</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== FORM (Figma: screen-form + các khung lỗi) ===================== -->
+    <section class="view" id="view-register" data-view="register" aria-labelledby="register-title" hidden>
+      <div class="container page form-page">
+        <a class="link-back" id="register-back" href="#/"><span class="icon icon--back" aria-hidden="true"></span>Quay lại chi tiết sự kiện</a>
+
+        <div class="card-form">
+          <h1 class="visually-hidden" id="register-title" tabindex="-1">Đăng ký tham gia</h1>
+          <div class="event-summary">
+            <p class="event-summary__title" id="register-event-title"></p>
+            <p class="event-summary__meta" id="register-event-meta"></p>
+          </div>
+
+          <!-- Figma: alert alert--error (409 hết chỗ / trùng email, lỗi mạng) -->
+          <div class="alert alert--error" id="form-alert" role="alert" hidden>
+            <span class="icon icon--alert alert__icon" aria-hidden="true"></span>
+            <div class="alert__body">
+              <p class="alert__title" id="form-alert-title"></p>
+              <p class="alert__desc" id="form-alert-desc"></p>
+              <a class="btn btn--secondary alert__action" id="form-alert-action" href="#/lich-trinh" hidden>Xem sự kiện khác</a>
+            </div>
+          </div>
+
+          <form class="form-register" id="form-register" novalidate>
+            <div class="input" data-field="fullName">
+              <label class="input__label" for="fullName">Họ và tên</label>
+              <input class="input__field" id="fullName" name="fullName" type="text" autocomplete="name"
+                     maxlength="100" aria-describedby="fullName-msg">
+              <p class="input__helper" id="fullName-msg" data-helper="Ví dụ: Nguyễn Văn A">Ví dụ: Nguyễn Văn A</p>
+            </div>
+
+            <div class="input" data-field="email">
+              <label class="input__label" for="email">Email</label>
+              <input class="input__field" id="email" name="email" type="email" autocomplete="email" inputmode="email"
+                     maxlength="254" aria-describedby="email-msg">
+              <p class="input__helper" id="email-msg" data-helper="Ví dụ: sinhvien@gm.uit.edu.vn">Ví dụ: sinhvien@gm.uit.edu.vn</p>
+            </div>
+
+            <div class="input" data-field="mssv">
+              <label class="input__label" for="mssv">MSSV</label>
+              <input class="input__field" id="mssv" name="mssv" type="text" inputmode="numeric" autocomplete="off"
+                     maxlength="8" aria-describedby="mssv-msg">
+              <p class="input__helper" id="mssv-msg" data-helper="8 chữ số, ví dụ 24521544">8 chữ số, ví dụ 24521544</p>
+            </div>
+
+            <button class="btn btn--primary btn--block" id="submit-btn" type="submit">Xác nhận đăng ký</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== SUCCESS (Figma: screen-success) ===================== -->
+    <section class="view" id="view-success" data-view="success" aria-labelledby="success-title" hidden>
+      <div class="container page form-page">
+        <a class="link-back" href="#/"><span class="icon icon--back" aria-hidden="true"></span>Về trang chủ UIT Web Day</a>
+
+        <div class="card-form">
+          <div class="success-message">
+            <span class="success-icon" aria-hidden="true"><span class="icon icon--check"></span></span>
+            <h1 class="success-title" id="success-title" tabindex="-1">Đăng ký thành công!</h1>
+            <p class="success-desc">Thông tin xác nhận sẽ được gửi đến <strong id="success-email"></strong>.</p>
+          </div>
+
+          <article class="card-ticket" aria-label="Vé tham dự">
+            <p class="card-ticket__eyebrow">VÉ THAM DỰ</p>
+            <div class="card-ticket__event">
+              <h2 class="card-ticket__title" id="ticket-title"></h2>
+              <p class="card-ticket__meta" id="ticket-time"></p>
+              <p class="card-ticket__meta" id="ticket-place"></p>
+            </div>
+            <hr class="divider">
+            <div class="card-ticket__code">
+              <p class="card-ticket__code-label">Mã vé</p>
+              <p class="card-ticket__code-value" id="ticket-code"></p>
+            </div>
+            <figure class="ticket-qr">
+              <img class="ticket-qr__image" src="img/qr-illustration.svg" alt="" width="128" height="128">
+              <figcaption class="ticket-qr__caption">QR minh họa · không dùng để check-in</figcaption>
+            </figure>
+          </article>
+
+          <a class="btn btn--secondary" id="success-back" href="#/">Quay lại chi tiết sự kiện</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Figma: site-footer -->
+  <footer class="site-footer" id="lien-he">
+    <div class="container site-footer__inner">
+      <div class="site-footer__info">
+        <p class="site-footer__brand">UIT Web Day 2026</p>
+        <p class="site-footer__org">Trường ĐH Công nghệ Thông tin – ĐHQG-HCM</p>
+      </div>
+      <p class="site-footer__copy">© 2026 Nhóm 1 · SE347 – Công nghệ Web và ứng dụng</p>
+    </div>
+  </footer>
+
+  <!-- Template thẻ sự kiện — Figma component Card/Event -->
+  <template id="tpl-card-event">
+    <article class="card-event">
+      <div class="card-event__thumb" aria-hidden="true">&lt;/&gt;</div>
+      <div class="card-event__body">
+        <span class="badge-category card-event__category"></span>
+        <h3 class="card-event__title"><a class="card-event__link" href="#"></a></h3>
+        <div class="card-event__meta">
+          <p class="card-event__date"></p>
+          <p class="card-event__place"></p>
+        </div>
+        <div class="card-event__footer">
+          <span class="badge-capacity"></span>
+          <a class="btn btn--secondary card-event__cta" href="#">Xem chi tiết</a>
+        </div>
+      </div>
+    </article>
+  </template>
+</body>
+</html>
