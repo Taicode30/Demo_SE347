@@ -136,8 +136,8 @@ public static class Seed
             {
                 Title = "Tech Seminar: Building Modern Web with React & Next.js",
                 Category = "Web Development",
-                Time = new DateTime(2026, 10, 24, 9, 0, 0),
-                EndTime = new DateTime(2026, 10, 24, 11, 30, 0),
+                Time = new DateTime(2026, 11, 24, 8, 0, 0),
+                EndTime = new DateTime(2026, 11, 24, 11, 30, 0),
                 Location = "Hội trường A · Cơ sở chính",
                 Capacity = 50,
                 Description = "Khám phá cách xây dựng ứng dụng web hiện đại với React và Next.js qua một demo thực tế, từ tổ chức giao diện đến tối ưu trải nghiệm người dùng.",
@@ -147,8 +147,8 @@ public static class Seed
             {
                 Title = "Workshop: Thiết kế giao diện web với Figma",
                 Category = "UI/UX Design",
-                Time = new DateTime(2026, 10, 24, 13, 30, 0),
-                EndTime = new DateTime(2026, 10, 24, 15, 30, 0),
+                Time = new DateTime(2026, 11, 24, 13, 30, 0),
+                EndTime = new DateTime(2026, 11, 24, 15, 30, 0),
                 Location = "Phòng B1.14 · Tòa B",
                 Capacity = 30,
                 Description = "Thực hành dựng design system nhỏ trong Figma: Variables, component có variants, Auto Layout và bàn giao cho lập trình viên bằng Dev Mode.",
@@ -158,8 +158,8 @@ public static class Seed
             {
                 Title = "Showcase: Dự án web của sinh viên UIT",
                 Category = "Showcase",
-                Time = new DateTime(2026, 10, 24, 16, 0, 0),
-                EndTime = new DateTime(2026, 10, 24, 17, 0, 0),
+                Time = new DateTime(2026, 11, 24, 16, 0, 0),
+                EndTime = new DateTime(2026, 11, 24, 17, 0, 0),
                 Location = "Sảnh tòa E",
                 Capacity = 3, // nhỏ để demo trường hợp hết chỗ (409)
                 Description = "Các nhóm sinh viên trình bày dự án web nổi bật trong học kỳ, kèm phần hỏi đáp và bình chọn dự án được yêu thích nhất.",
